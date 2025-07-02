@@ -1,5 +1,8 @@
 \name{allFit}
 \alias{allFit}
+\alias{plot.allFit}
+\alias{summary.allFit}
+\alias{plot.fixef.allFit}
 \title{Refit a fitted model with all available optimizers}
 \usage{
 allFit(object, meth.tab = NULL, data=NULL,
@@ -9,9 +12,20 @@ allFit(object, meth.tab = NULL, data=NULL,
        parallel = c("no", "multicore", "snow"),
        ncpus = getOption("allFit.ncpus", 1L), cl = NULL,
        catch.errs = TRUE)
+
+\method{plot}{fixef.allFit}(x,
+                             shared_y_axis_limits = TRUE,
+                             multiply_y_axis_limits = 1,
+                             decimal_points = NULL,
+                             select_predictors = NULL,
+                             nrow = NULL,
+                             y_title = 'Fixed effect',
+                             y_title_hjust = NULL,
+                             number_optimizers = TRUE,
+                             interaction_symbol_x = TRUE, ...)
 }
 \arguments{
-  \item{object}{a fitted model}
+  \item{object, x}{a fitted \code{merMod} model (for \code{allFit}) or an \code{allFit} object (for the methods).}
   \item{meth.tab}{a matrix (or data.frame) with columns
     \describe{
       \item{method}{the name of a specific optimization method to pass
@@ -37,6 +51,16 @@ allFit(object, meth.tab = NULL, data=NULL,
   \item{catch.errs}{(logical) Wrap model fits in \code{tryCatch} clause
     to skip over errors? (\code{catch.errs=FALSE} is probably only
     useful for debugging)}
+  \item{shared_y_axis_limits}{(logical) use the same Y axis limits in all plots?}
+  \item{multiply_y_axis_limits}{(numeric) expand Y axis limits by a factor (only available if \code{shared_y_axis_limits = TRUE}).}
+  \item{decimal_points}{(integer) number of decimal points to display.}
+  \item{select_predictors}{(character) vector of predictor names to plot.}
+  \item{nrow}{(integer) number of rows in the plot layout.}
+  \item{y_title}{(character) Y axis title.}
+  \item{y_title_hjust}{(numeric) horizontal justification of the Y axis title.}
+  \item{number_optimizers}{(logical) add a number to the names of optimizers?}
+  \item{interaction_symbol_x}{(logical) replace colon in interaction terms with a multiplication symbol?}
+  \item{...}{additional arguments passed to methods}
 }
 \value{
   an object of type \code{allFit}, which is a list of fitted \code{merMod} objects (unless \code{show.meth.tab} is
@@ -87,6 +111,8 @@ library(lme4)
   ss$fixef               ## table of fixed effects
   ss$sdcor               ## table of random effect SDs and correlations
   ss$theta               ## table of random effects parameters, Cholesky scale
+  plot(gm_all)
+  plot.fixef.allFit(gm_all)
 } %% interactive()
 \dontrun{
   ## Parallel examples for Windows
